@@ -1,0 +1,27 @@
+{
+  "name": "@cwa/api",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "start": "bun run src/index.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.0",
+    "@supabase/supabase-js": "^2.49.0",
+    "adm-zip": "^0.5.17",
+    "bcryptjs": "^2.4.3",
+    "drizzle-orm": "^0.44.0",
+    "hono": "^4.6.0",
+    "postgres": "^3.4.5"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.30.0",
+    "@types/bun": "latest",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/adm-zip": "^0.5.5"
+  }
+}
