@@ -10,18 +10,29 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@cwa/types": "workspace:*",
     "@hono/node-server": "^1.13.0",
+    "@hono/zod-validator": "^0.8.0",
     "@supabase/supabase-js": "^2.49.0",
     "adm-zip": "^0.5.17",
     "bcryptjs": "^2.4.3",
     "drizzle-orm": "^0.44.0",
+    "esbuild": "^0.28.0",
     "hono": "^4.6.0",
-    "postgres": "^3.4.5"
+    "jose": "^6.2.3",
+    "postgres": "^3.4.5",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "drizzle-kit": "^0.30.0",
     "@types/bun": "latest",
     "@types/bcryptjs": "^2.4.6",
     "@types/adm-zip": "^0.5.5"
+  },
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "peerDependencies": {
+    "typescript": "^5"
   }
 }

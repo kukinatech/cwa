@@ -1,0 +1,14 @@
+{
+  "name": "tests",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest", 
+    "@cwa/types": "workspace:*"
+
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

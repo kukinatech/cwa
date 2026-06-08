@@ -1,6 +1,7 @@
 import AdmZip from 'adm-zip'
 import { uploadFiles } from './storage.service'
-import { BUCKET, supabase } from './supabase';
+import { parseConfig } from '../lib/config-parser';
+import type { CwaConfig } from '@cwa/types';
 
 const REQUIRED_FILES = ['cwa.config.ts']
 const ALLOWED_EXTENSIONS = ['.ts', '.html', '.css', '.json']
@@ -19,7 +20,7 @@ export function extractAndValidateZip(buffer: Buffer): ZipValidationResult {
   }
 
   const entries = zip.getEntries().filter(e => !e.isDirectory)
-  
+
   // valida extensões permitidas
   const invalidFiles = entries.filter(e => {
     const name = e.entryName.toLowerCase()
@@ -28,7 +29,7 @@ export function extractAndValidateZip(buffer: Buffer): ZipValidationResult {
   if (invalidFiles.length) {
     return {
       ok: false,
-      error: `O Ficheiro : ${invalidFiles.map(e => e.entryName).join(', ')} não é válido`,
+      error: `Os Ficheiros : ${invalidFiles.map(e => e.entryName).join(', ')} não são válidos`,
     }
   }
   // normaliza paths — remove pasta raiz do zip se existir
@@ -37,12 +38,12 @@ export function extractAndValidateZip(buffer: Buffer): ZipValidationResult {
     const filename = parts.length > 1 ? parts.slice(1).join('/') : parts[0]
     return { filename: filename!, content: e.getData() }
   })
-  
+
 
   // valida ficheiros obrigatórios
   const filenames = files.map(f => f.filename)
   const missing = REQUIRED_FILES.filter(r => !filenames.includes(r))
-  
+
   if (missing.length > 0)
     return { ok: false, error: `Missing required files: ${missing.join(', ')}` }
 
@@ -64,6 +65,17 @@ export async function processComponentUpload(
   // 1. valida e extrai zip
   const validation = extractAndValidateZip(zipBuffer)
   if (!validation.ok) return { ok: false, error: validation.error }
+
+  const configFile = validation.files.find(f => f.filename === 'cwa.config.ts')
+  if (!configFile) return { ok: false, error: 'cwa.config.ts não encontrado' }
+
+  let config: CwaConfig
+  try {
+    config = await parseConfig(Buffer.from(configFile.content).toString('utf-8'))
+  } catch (e) {
+    return { ok: false, error: (e as Error).message }
+  }
+
 
   // 2. faz upload para o Storage
   const { ok, failed } = await uploadFiles(slug, validation.files)

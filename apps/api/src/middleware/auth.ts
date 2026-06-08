@@ -2,36 +2,48 @@ import { createMiddleware } from 'hono/factory'
 import { db } from '../db/client'
 import { cliTokens, users } from '../db/schema'
 import { eq } from 'drizzle-orm'
-import { hashToken } from '../lib/crypto';
-import { getCookie } from 'hono/cookie';
+import { hashToken, verifyJwt } from '../lib/crypto';
+import { HTTPException } from 'hono/http-exception';
 
 
-type AppContext = {
-  Variables: {
-    userId: string
-  }
-}
 
 
 // hash simples com Bun nativo
 
-export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
-  const token = getCookie(c, 'cwa_token')
+export const authMiddleware = createMiddleware<{ Variables: { userId: string } }>(
+  async (c, next) => {
+    const header = c.req.header('Authorization')
 
-  if (!token)
-    return c.json({ error: 'Unauthorized' }, 401)
+    if (!header?.startsWith('Bearer ')) {
+      throw new HTTPException(401, { message: 'Token em falta' })
+    }
 
-  const hash = hashToken(token)
+    const token = header.slice(7)
 
-  const [row] = await db
-    .select({ userId: cliTokens.userId })
-    .from(cliTokens)
-    .where(eq(cliTokens.tokenHash, hash))
-    .limit(1)
+    // 1. tentar JWT de sessão
+    try {
+      const payload = await verifyJwt(token)
+      c.set('userId', payload.sub)
+      return await next()
+    } catch { }
 
-  if (!row)
-    return c.json({ error: 'Unauthorized' }, 401)
+    // 2. tentar token CLI (hash SHA-256)
+    const tokenHash = hashToken(token)
+    const [cliToken] = await db
+      .select({ userId: cliTokens.userId, expiresAt: cliTokens.expiresAt })
+      .from(cliTokens)
+      .where(eq(cliTokens.tokenHash, tokenHash))
+      .limit(1)
 
-  c.set('userId', row.userId)
-  await next()
-})
+    if (!cliToken) {
+      throw new HTTPException(401, { message: 'Token inválido' })
+    }
+
+    if (cliToken.expiresAt < new Date()) {
+      throw new HTTPException(401, { message: 'Token expirado' })
+    }
+
+    c.set('userId', cliToken.userId)
+    await next()
+  }
+)
