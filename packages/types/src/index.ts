@@ -17,4 +17,12 @@ export {
   extractDefaults,
 } from './config.utils'
 
+
+export {
+  generateConfigTemplate,
+  generateTsTemplate,
+  generateHtmlTemplate,
+  generateCssTemplate,
+} from './config.template'
+
 export type { FlatProp, StyleValues } from './config.utils'

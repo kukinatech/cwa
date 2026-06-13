@@ -31,12 +31,13 @@ export async function loginCommand() {
       method: 'POST',
       headers: { Authorization: `Bearer ${sessionToken}` },
     })
+    
     writeConfig({ token: cliToken, apiUrl: getApiUrl() })
 
     spinner.succeed(chalk.green('Autenticado com sucesso!'))
     console.log(chalk.gray('  Token guardado em ~/.cwa/config.json\n'))
   } catch (e) {
-    spinner.fail(chalk.red(`Erro: ${(e as Error).message}`))
+    spinner.fail(chalk.red(`${(e as Error).message}`))
     process.exit(1)
   }
 }

@@ -4,7 +4,7 @@ import { db } from '../db/client'
 import { users, cliTokens } from '../db/schema'
 import { eq } from 'drizzle-orm'
 import { hashToken, hashPassword, verifyPassword, signJwt } from '../lib/crypto'
-import { authMiddleware } from '../middleware/auth';
+import { authCliMiddleware, authMiddleware } from '../middleware/auth';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator'
 export const authRoutes = new Hono()
@@ -48,7 +48,7 @@ authRoutes.post('/login', zValidator('json', loginSchema), async (c) => {
   try {
 
     const { email, password } = c.req.valid('json')
-
+    console.log(email, password)
     const user = await db.query.users.findFirst({
       where: eq(users.email, email),
     })
@@ -95,29 +95,22 @@ authRoutes.post('/logout', async (c) => {
 })
 
 // GET /api/auth/me  (sessão actual)
-authRoutes.get('/me', async (c) => {
-  const token = getCookie(c, 'cwa_token')
+authRoutes.get('/me', authMiddleware, async (c) => {
+  try {
+    const userId = c.get('userId') as string
 
-  if (!token)
-    return c.json({ error: 'Não autorizado' }, 401)
+    const user = await db
+      .select({ id: users.id, email: users.email, username: users.username, createdAt: users.createdAt })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1)
 
-  const hash = hashToken(token)
+    if (!user.length) return c.json({ error: 'Utilizador não encontrado' }, 404)
 
-  const [row] = await db
-    .select({
-      id: users.id,
-      username: users.username,
-      email: users.email,
-    })
-    .from(cliTokens)
-    .innerJoin(users, eq(cliTokens.userId, users.id))
-    .where(eq(cliTokens.tokenHash, hash))
-    .limit(1)
-
-  if (!row)
-    return c.json({ error: 'Não autorizado' }, 401)
-
-  return c.json({ user: row })
+    return c.json({ user: user[0] })
+  } catch (error) {
+    return c.json({ error: 'Algo deu errado durante a verificação do usuário' }, 500)
+  }
 })
 
 authRoutes.post('/token', authMiddleware, async (c) => {

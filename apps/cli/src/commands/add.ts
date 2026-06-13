@@ -5,7 +5,7 @@ import ora from 'ora'
 import chalk from 'chalk'
 import { readConfig, getApiUrl } from '../lib/config'
 
-export async function addCommand(slug: string, styleId: string) {
+export async function addCommand(slug: string, styleName?: string) {
   const config = readConfig()
 
   if (!config?.token) {
@@ -14,10 +14,11 @@ export async function addCommand(slug: string, styleId: string) {
   }
 
   const spinner = ora(`A instalar ${chalk.cyan(slug)}...`).start()
-
+  // Se não tiver nome de estilo usa o estilo padrão
+  styleName = styleName || 'default'
   try {
     const res = await fetch(
-      `${getApiUrl()}/components/${slug}/${styleId}/download`,
+      `${getApiUrl()}/components/${slug}/${styleName}/download`,
       { headers: { Authorization: `Bearer ${config.token}` } }
     )
 

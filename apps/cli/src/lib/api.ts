@@ -13,23 +13,24 @@ export async function apiRequest<T>(
     if (!(options.body instanceof FormData)) {
       headers['Content-Type'] = 'application/json'
     }
-
     if (config?.token) {
       headers['Authorization'] = `Bearer ${config.token}`
     }
-
+    
     const res = await fetch(`${getApiUrl()}${path}`, { ...options, headers })
 
     if (!res.ok) {
-      const responseError = await res.json()
-      if (responseError.error?.name === 'ZodError') {
-        throw new Error(responseError.error?.message)
+      switch (res.status) {
+        case 401:
+          throw new Error("Não autorizado")
+        case 500:
+          throw new Error(`Erro no servidor, tenta novamente`)
+        default:
+          throw new Error(`Erro Inesperado, tenta novamente`)
       }
-      throw new Error(`HTTP ${res.status}`)
     }
-    return res.json()
-
+    return await res.json()
   } catch (error: any) {
-    throw new Error(`API request failed: ${error.message}`)
+    throw new Error(error.message)
   }
 }

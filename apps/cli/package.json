@@ -1,11 +1,23 @@
 {
-  "name": "@cwa/cli",
-  "version": "0.1.0",
+  "name": "@admiro/cwa-cli",
+  "version": "0.1.2",
+  "type": "module",
   "bin": {
-    "cwa": "./src/index.ts"
+    "cwa": "./dist/index.js"
+  },
+  "author": {
+    "email": "admiroalfredo1742@gmail.com",
+    "name": "Admiro André"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+   "build": "bun build ./src/index.ts --outdir ./dist --target node",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@cwa/types": "workspace:*",
+    "@admiro/cwa-core": "^0.1.0",
     "@types/node": "^25.9.2",
     "adm-zip": "^0.5.10",
     "chalk": "^5.3.0",

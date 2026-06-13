@@ -86,7 +86,7 @@ export interface CwaConfig {
    *     header: {
    *       fontSize: { type: 'range', default: 18, min: 12, max: 32, unit: 'px', cssVar: '--modal-header-font-size' }
    *     }
-   *   }
+   *   }  
    * }
    */
   customizable: CwaStyleGroup

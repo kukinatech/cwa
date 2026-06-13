@@ -185,13 +185,26 @@ componentRoutes.get('/:componentSlug/:styleName/download', async (c) => {
       .limit(1)
 
     if (!comp) return c.json({ error: 'Component not found' }, 404)
-
-    const [style] = await db
-      .select()
-      .from(compStyles)
-      .where(eq(compStyles.name, styleName))
-      .limit(1)
-
+    let styles;
+    if (styleName === 'default') {
+      styles = await db
+        .select()
+        .from(compStyles)
+        .where(
+          and(
+            eq(compStyles.componentId, comp.id),
+            eq(compStyles.isDefault, true)
+          )
+        )
+        .limit(1)
+    } else {
+      styles = await db
+        .select()
+        .from(compStyles)
+        .where(eq(compStyles.name, styleName))
+        .limit(1)
+    }
+    const [style] = styles
     if (!style) return c.json({ error: 'Style not found' }, 404)
 
     // 1. listar e baixar ficheiros do Storage
