@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
-    "start": "bun run src/index.ts",
+    "start": "node  src/index.ts",
     "build": "bun build src/index.ts --outfile dist/index.js --target node",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
