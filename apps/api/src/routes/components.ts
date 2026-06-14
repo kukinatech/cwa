@@ -6,7 +6,7 @@ import { authMiddleware } from '../middleware/auth'
 import { processComponentUpload } from '../services/component.service'
 import { deleteComponentFiles, listComponentFiles } from '../services/storage.service'
 import { parseConfig } from '../lib/config-parser';
-import { generateCssVars, type StyleValues } from '@cwa/types';
+import { generateCssVars, type StyleValues } from '@admiro/cwa-core';
 import AdmZip from 'adm-zip';
 
 export const componentRoutes = new Hono()

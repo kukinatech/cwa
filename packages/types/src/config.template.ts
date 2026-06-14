@@ -10,7 +10,7 @@ export function generateConfigTemplate(options: TemplateOptions): string {
   const tagsList = tags.map(t => `'${t}'`).join(', ')
   const prefix   = name.toLowerCase().replace(/\s+/g, '-')
 
-  return `import type { CwaConfig } from '@cwa/types'
+  return `import type { CwaConfig } from '@admiro/cwa-core'
 
     export default {
       name:        '${name}',

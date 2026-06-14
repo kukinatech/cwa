@@ -1,4 +1,4 @@
-import type { CwaConfig } from '@cwa/types'
+import type { CwaConfig } from '@admiro/cwa-core'
 import { transform } from 'esbuild'
 /**
  *  usa um bundler (esbuild via Bun) para avaliar o módulo.

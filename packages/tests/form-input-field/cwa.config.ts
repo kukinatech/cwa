@@ -1,4 +1,4 @@
-import type { CwaConfig } from '@cwa/types'
+import type { CwaConfig } from '@admiro/cwa-core'
 
 export default {
   name: 'form-input-field',
