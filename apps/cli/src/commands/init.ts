@@ -3,7 +3,7 @@ import { join } from 'path'
 import chalk from 'chalk'
 import ora from 'ora'
 import prompts from 'prompts'
-import { generateConfigTemplate, generateTsTemplate, generateHtmlTemplate, generateCssTemplate } from '@cwa/types'
+import { generateConfigTemplate, generateTsTemplate, generateHtmlTemplate, generateCssTemplate } from '@admiro/cwa-core'
 export async function initCommand() {
   console.log(chalk.bold('\n  CWA — Iniciar componente\n'))
 

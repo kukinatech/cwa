@@ -3,10 +3,6 @@ import { db } from '../db/client'
 import { compStyles, components } from '../db/schema'
 import { eq, and} from 'drizzle-orm'
 import { authMiddleware } from '../middleware/auth'
-import { parseConfig } from '../lib/config-parser';
-import { generateCssVars, type StyleValues } from '@cwa/types';
-import { listComponentFiles } from '../services/storage.service';
-import AdmZip from 'adm-zip';
 
 export const styleRoutes = new Hono()
 

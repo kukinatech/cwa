@@ -1,7 +1,7 @@
 import AdmZip from 'adm-zip'
 import { uploadFiles } from './storage.service'
 import { parseConfig } from '../lib/config-parser';
-import type { CwaConfig } from '@cwa/types';
+import type { CwaConfig } from '@admiro/cwa-core';
 
 const REQUIRED_FILES = ['cwa.config.ts']
 const ALLOWED_EXTENSIONS = ['.ts', '.html', '.css', '.json']
