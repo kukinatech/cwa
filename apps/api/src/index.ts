@@ -3,6 +3,7 @@ import { serve } from '@hono/node-server'
 import { logger } from 'hono/logger'
 import { cors } from 'hono/cors'
 import { routes } from './routes'
+import 'dotenv/config';
 
 const app = new Hono()
 

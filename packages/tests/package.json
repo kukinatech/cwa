@@ -5,7 +5,7 @@
   "private": true,
   "devDependencies": {
     "@types/bun": "latest", 
-    "@cwa/types": "workspace:*"
+    "@admiro/cwa-core": "workspace:*"
 
   },
   "peerDependencies": {
