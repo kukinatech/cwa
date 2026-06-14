@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { homedir } from 'os'
 import { join } from 'path'
-
+import 'dotenv/config';
 const CONFIG_DIR = join(homedir(), '.cwa')
 const CONFIG_FILE = join(CONFIG_DIR, 'config.json')
 

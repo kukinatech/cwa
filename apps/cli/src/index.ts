@@ -5,13 +5,15 @@ import { addCommand } from './commands/add'
 import { publishCommand } from './commands/publish'
 import { meCommand } from './commands/me';
 import { initCommand } from './commands/init'
+import 'dotenv/config';
+const pkg = require('../package.json')
 
 const program = new Command()
 
 program
   .name('cwa')
   .description('CLI para instalar e publicar componentes Angular')
-  .version('0.1.0')
+  .version(pkg.version)
 
 program
   .command('login')
